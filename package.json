@@ -1,0 +1,24 @@
+{
+  "name": "mcap-split-by-topic",
+  "version": "1.0.0",
+  "description": "Script to split (by topics) a MCAP in multiple ones",
+  "main": "index.ts",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "split": "ts-node index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mcap/core": "^2.1.6",
+    "@mcap/nodejs": "^1.0.2",
+    "@mcap/support": "^1.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10"
+  }
+}
