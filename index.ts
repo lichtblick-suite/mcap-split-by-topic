@@ -3,6 +3,7 @@ import { McapWriter, McapIndexedReader } from "@mcap/core";
 import { FileHandleReadable, FileHandleWritable } from "@mcap/nodejs";
 import { loadDecompressHandlers } from "@mcap/support";
 import path from "path";
+import zstd from "@lichtblick/wasm-zstd";
 
 // Read the input files from the command line argument
 const inputFiles = process.argv.slice(2);
@@ -46,6 +47,11 @@ async function splitMcapByTopic(inputFile: string) {
     let newChannelId = 0;
 
     const topic = channel.topic;
+
+    if (topic != "/sensorik/axis_main/image/compressed") {
+      continue;
+    }
+
     if (!writers.has(topic)) {
       const outputDir = path.join(baseName);
       await fs.mkdir(outputDir, { recursive: true }); // Ensure directory exists
@@ -55,6 +61,10 @@ async function splitMcapByTopic(inputFile: string) {
       const outputStream = await fs.open(outputFile, "w");
       const writer = new McapWriter({
         writable: new FileHandleWritable(outputStream),
+        compressChunk: (data) => ({
+          compression: "zstd",
+          compressedData: zstd.compress(data),
+        }),
       });
       const schema = reader.schemasById.get(channel.schemaId);
       const newSchemaId = await writer.registerSchema(schema);
